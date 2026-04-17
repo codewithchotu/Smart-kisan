@@ -1,20 +1,24 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Quote } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const FarmerHero = () => {
+  const { t } = useTranslation();
   const successStories = [
     {
       name: "Ramesh Rao",
       location: "Medchal, Telangana",
-      story: "Increased yield by 40% using Smart Kisan predictions.",
-      image: "/happy_indian_farmer_wide_shot_1776453976080.png"
+      storyKey: "farmerStories.ramesh",
+      image: "/happy_indian_farmer_wide_shot_1776453976080.png",
+      link: "https://www.lokmat.com/agriculture/success-story/latest-news-farmer-success-story-the-magic-formula-of-intercropping-turmeric-and-chilli-changed-the-direction-of-jayarams-farming-a-a1003/"
     },
     {
       name: "Lakshmi Devi",
       location: "Rangareddy, Telangana",
-      story: "Sold cotton at peak price thanks to the AI Market alerts.",
-      image: "/smart_farming_tablet_woman_1776453481638.png"
+      storyKey: "farmerStories.lakshmi",
+      image: "/smart_farming_tablet_woman_1776453481638.png",
+      link: "https://www.deccanchronicle.com/nation/current-affairs/240123/smart-kisan-app-helps-farmers-get-best-prices.html"
     }
   ];
 
@@ -24,10 +28,9 @@ const FarmerHero = () => {
         <div className="flex items-center gap-2 mb-6">
           <Users className="text-emerald-600" size={24} />
           <h2 className="text-xl font-black text-gray-800 uppercase tracking-tighter italic">
-            Kisan Success Stories
+            {t('farmerStories.heading')}
           </h2>
         </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {successStories.map((story, idx) => (
             <motion.div 
@@ -48,7 +51,7 @@ const FarmerHero = () => {
                     <Quote className="text-emerald-400 mt-1 flex-shrink-0" size={20} />
                     <div>
                       <p className="text-sm font-medium italic leading-relaxed mb-3">
-                        "{story.story}"
+                        "{t(story.storyKey)}"
                       </p>
                       <div className="flex items-center justify-between">
                         <div>
@@ -58,9 +61,17 @@ const FarmerHero = () => {
                           </p>
                         </div>
                         <div className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold">
-                          VERIFIED FARMER
+                          {t('farmerStories.verified')}
                         </div>
                       </div>
+                      <a 
+                        href={story.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-block mt-2 px-3 py-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold rounded-full transition-colors duration-200"
+                      >
+                        {t('farmerStories.readMore')} →
+                      </a>
                     </div>
                   </div>
                 </div>

@@ -172,7 +172,12 @@ const resources = {
       "auth.error": "An error occurred",
       "auth.logoutSuccess": "Logged out successfully",
       "auth.welcome": "Welcome",
-      "auth.logout": "Logout"
+      "auth.logout": "Logout",
+      "farmerStories.heading": "Kisan Success Stories",
+      "farmerStories.ramesh": "Increased yield by 40% using Smart Kisan predictions.",
+      "farmerStories.lakshmi": "Sold cotton at peak price thanks to the AI Market alerts.",
+      "farmerStories.verified": "VERIFIED FARMER",
+      "farmerStories.readMore": "Read More"
     }
   },
   hi: {
@@ -345,7 +350,12 @@ const resources = {
       "auth.error": "एक त्रुटि हुई",
       "auth.logoutSuccess": "सफलतापूर्वक लॉग आउट कर दिया गया",
       "auth.welcome": "स्वागत है",
-      "auth.logout": "लॉग आउट"
+      "auth.logout": "लॉग आउट",
+      "farmerStories.heading": "किसान सफलता की कहानियाँ",
+      "farmerStories.ramesh": "Smart Kisan की भविष्यवाणियों का उपयोग करके फसल उत्पादन 40% बढ़ गया।",
+      "farmerStories.lakshmi": "AI मार्केट अलर्ट की मदद से कपास को उच्चतम कीमत पर बेचा।",
+      "farmerStories.verified": "सत्यापित किसान",
+      "farmerStories.readMore": "और पढ़ें"
     }
   },
   pa: {
@@ -509,7 +519,12 @@ const resources = {
       "auth.error": "ਇੱਕ ਗਲਤੀ ਆਈ",
       "auth.logoutSuccess": "ਸਫਲਤਾਪੂਰਵਕ ਲਾਗ ਆਊਟ",
       "auth.welcome": "ਸਵਾਗਤ ਹੈ",
-      "auth.logout": "ਲਾਗ ਆਊਟ"
+      "auth.logout": "ਲਾਗ ਆਊਟ",
+      "farmerStories.heading": "ਕਿਸਾਨ ਸਫਲਤਾ ਕਹਾਣੀਆਂ",
+      "farmerStories.ramesh": "Smart Kisan ਦੀਆਂ ਪੇਸ਼ਗੋਈਆਂ ਨਾਲ ਫਸਲ ਦੀ ਉਪਜ 40% ਵਧੀ।",
+      "farmerStories.lakshmi": "AI ਮਾਰਕੀਟ ਅਲਰਟਾਂ ਦੇ ਸਹਾਰੇ ਕਪਾਹ ਨੂੰ ਉੱਚ ਕੀਮਤ ਤੇ ਵੇਚਿਆ।",
+      "farmerStories.verified": "ਮੰਨੀ ਹੋਈ ਕਿਸਾਨ",
+      "farmerStories.readMore": "ਹੋਰ ਪੜ੍ਹੋ"
     }
   },
   te: {
@@ -678,11 +693,16 @@ const resources = {
       "auth.emailExists": "ఈమెయిల్ ఇప్పటికే నమోదై ఉంది",
       "auth.signupSuccess": "ఖాతా విజయవంతంగా సృష్టించబడింది! దయచేసి లాగిన్ అవ్వండి.",
       "auth.invalidCredentials": "చెల్లని ఈమెయిల్ లేదా పాస్‌వర్డ్",
-      "auth.loginSuccess": "లాగిన్ విజయవంతమైంది!",
+      "auth.loginSuccess": "విజయవంతంగా లాగిన్ అయినారు!",
       "auth.error": "ఒక లోపం సంభవించింది",
       "auth.logoutSuccess": "విజయవంతంగా లాగ్ అవుట్ అయ్యారు",
       "auth.welcome": "స్వాగతం",
-      "auth.logout": "లాగ్ అవుట్"
+      "auth.logout": "లాగ్ అవుట్",
+      "farmerStories.heading": "రైతు విజయ కథలు",
+      "farmerStories.ramesh": "Smart Kisan సూచనలతో దిగుబడి 40% పెరిగింది.",
+      "farmerStories.lakshmi": "AI మార్కెట్ హెచ్చరికల కారణంగా పత్తిని మంచి ధరలో అమ్మారు.",
+      "farmerStories.verified": "ధృవీకృత రైతు",
+      "farmerStories.readMore": "మరింత చదవండి"
     }
   }
 };
