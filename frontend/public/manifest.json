@@ -1,0 +1,63 @@
+{
+  "name": "Smart Kisan - AI Farming Assistant",
+  "short_name": "Smart Kisan",
+  "description": "AI-powered farming assistant with real-time weather, market prices, and crop recommendations",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%2316a34a' width='192' height='192'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='100' fill='white' font-family='Arial'>🌾</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%2316a34a' width='512' height='512'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='300' fill='white' font-family='Arial'>🌾</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["agriculture", "productivity"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%2316a34a' width='540' height='720'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='120' fill='white'>Smart Kisan</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Analyze Farm",
+      "short_name": "Analyze",
+      "description": "Analyze your farm conditions",
+      "url": "/?tab=dashboard",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%2316a34a' width='96' height='96'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='50' fill='white'>📊</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Check Market Prices",
+      "short_name": "Market",
+      "description": "View current crop market prices",
+      "url": "/?tab=market",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%2316a34a' width='96' height='96'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='50' fill='white'>💹</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
