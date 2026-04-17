@@ -17,6 +17,8 @@ import BestMarketFinder from './components/BestMarketFinder';
 import WhatsAppShare from './components/WhatsAppShare';
 import AuthModal from './components/Authmodal';
 import LanguageSelector from './components/LanguageSelector';
+import FarmerHero from './components/FarmerHero';
+import GovernmentSchemes from './components/GovernmentSchemes';
 
 const API_URL = 'http://localhost:5000/api';
 
@@ -107,6 +109,7 @@ function App() {
               { id: 'weather', label: t('nav.weather'), icon: '📍' },
               { id: 'market', label: t('nav.market'), icon: '📈' },
               { id: 'best-market', label: t('nav.bestMarket'), icon: '🏆' },
+              { id: 'schemes', label: t('nav.schemes'), icon: '🏛️' },
               { id: 'gamification', label: t('nav.achievements'), icon: '🏅' }
             ].map((tab) => (
               <button
@@ -130,28 +133,27 @@ function App() {
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-4 gap-6">
             {/* Input Form & Widgets Sidebar */}
-            <div className="lg:col-span-1 space-y-6">
-              <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
-                <InputForm onSubmit={handleAnalyze} loading={loading} />
+            {(activeTab === 'dashboard' || activeTab === 'weather') && !analysisResult && (
+              <div className="lg:col-span-1 space-y-6">
+                {activeTab === 'dashboard' && (
+                  <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
+                    <InputForm onSubmit={handleAnalyze} loading={loading} />
+                  </div>
+                )}
+                {activeTab === 'weather' && (
+                  <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30">
+                    <WeatherWidget />
+                  </div>
+                )}
               </div>
-              {activeTab === 'weather' && (
-                <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30">
-                  <WeatherWidget />
-                </div>
-              )}
-              {activeTab === 'gamification' && (
-                <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30">
-                  <Gamification />
-                </div>
-              )}
-            </div>
+            )}
 
             {/* Results Area */}
-            <div className="lg:col-span-3 space-y-6">
+            <div className={`space-y-6 ${((activeTab === 'dashboard' || activeTab === 'weather') && !analysisResult) ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
               {activeTab === 'dashboard' && analysisResult && (
                 <>
                   <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
-                    <Dashboard result={analysisResult} />
+                    <Dashboard result={analysisResult} onSwitchTab={setActiveTab} />
                   </div>
                   {analysisResult && (
                     <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
@@ -161,13 +163,20 @@ function App() {
                 </>
               )}
               {activeTab === 'dashboard' && !analysisResult && (
-                <div className="bg-gradient-to-br from-green-100 via-emerald-50 to-green-50 rounded-2xl shadow-xl border border-green-200 border-opacity-50 p-12 text-center">
-                  <div className="inline-flex items-center justify-center w-24 h-24 bg-white rounded-full shadow-lg mb-6">
-                    <Sprout size={64} className="text-green-600" />
+                <>
+                  <div className="bg-gradient-to-br from-green-100 via-emerald-50 to-green-50 rounded-2xl shadow-xl border border-green-200 border-opacity-50 p-12 text-center mb-6">
+                    <div className="inline-flex items-center justify-center w-24 h-24 bg-white rounded-full shadow-lg mb-6">
+                      <Sprout size={64} className="text-green-600" />
+                    </div>
+                    <h3 className="text-3xl font-bold mb-3 text-green-800">{t('dashboard.welcomeTitle')}</h3>
+                    <p className="text-gray-600 text-lg">{t('dashboard.welcomeDesc')}</p>
                   </div>
-                  <h3 className="text-3xl font-bold mb-3 text-green-800">{t('dashboard.welcomeTitle')}</h3>
-                  <p className="text-gray-600 text-lg">{t('dashboard.welcomeDesc')}</p>
-                </div>
+                  
+                  {/* Farmer Success Stories Section */}
+                  <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
+                    <FarmerHero />
+                  </div>
+                </>
               )}
               {activeTab === 'history' && (
                 <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
@@ -191,12 +200,17 @@ function App() {
               )}
               {activeTab === 'best-market' && (
                 <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
-                  <BestMarketFinder />
+                  <BestMarketFinder onSwitchTab={setActiveTab} />
                 </div>
               )}
               {activeTab === 'gamification' && (
                 <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
                   <Gamification />
+                </div>
+              )}
+              {activeTab === 'schemes' && (
+                <div className="bg-white bg-opacity-70 backdrop-blur-xl rounded-2xl shadow-xl border border-white border-opacity-30 overflow-hidden">
+                  <GovernmentSchemes />
                 </div>
               )}
             </div>

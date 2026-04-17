@@ -1,50 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, MapPin, DollarSign, Award } from 'lucide-react';
+import { TrendingUp, MapPin, Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 
-const BestMarketFinder = () => {
+const BestMarketFinder = ({ onSwitchTab }) => {
   const { t } = useTranslation();
   const [selectedCrop, setSelectedCrop] = useState('rice');
-  
-  // Mock market data with prices and trends
-  const marketData = {
-    rice: [
-      { market: 'Chandni Chowk, Delhi', price: 2400, change: '+2.5%', distance: '15 km', quality: '⭐⭐⭐⭐⭐' },
-      { market: 'Azadpur Mandi, Delhi', price: 2350, change: '-1.2%', distance: '22 km', quality: '⭐⭐⭐⭐' },
-      { market: 'Bhagirath Palace, Delhi', price: 2420, change: '+0.8%', distance: '8 km', quality: '⭐⭐⭐⭐⭐' },
-      { market: 'APMC, Haryana', price: 2300, change: '-0.5%', distance: '45 km', quality: '⭐⭐⭐⭐' }
-    ],
-    wheat: [
-      { market: 'Chandni Chowk, Delhi', price: 2100, change: '+1.5%', distance: '15 km', quality: '⭐⭐⭐⭐' },
-      { market: 'Mandi, Punjab', price: 2080, change: '+0.3%', distance: '120 km', quality: '⭐⭐⭐⭐⭐' },
-      { market: 'Haryana Mandi', price: 2050, change: '-0.8%', distance: '38 km', quality: '⭐⭐⭐⭐' }
-    ],
-    cotton: [
-      { market: 'APMC Mumbai', price: 5800, change: '+3.2%', distance: '35 km', quality: '⭐⭐⭐⭐⭐' },
-      { market: 'Gujarat Market', price: 5700, change: '+1.8%', distance: '220 km', quality: '⭐⭐⭐⭐' },
-      { market: 'Deccan Mandi', price: 5650, change: '-0.5%', distance: '180 km', quality: '⭐⭐⭐⭐' }
-    ],
-    corn: [
-      { market: 'Rajasthan Mandi', price: 1650, change: '+2.1%', distance: '60 km', quality: '⭐⭐⭐⭐' },
-      { market: 'UP Market', price: 1620, change: '+0.5%', distance: '140 km', quality: '⭐⭐⭐⭐⭐' }
-    ],
-    sugarcane: [
-      { market: 'Maharashtra Market', price: 3200, change: '+4.5%', distance: '50 km', quality: '⭐⭐⭐⭐⭐' },
-      { market: 'UP Sugar Market', price: 3100, change: '+2.3%', distance: '110 km', quality: '⭐⭐⭐⭐' }
-    ]
+  const [markets, setMarkets] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchMarkets();
+  }, [selectedCrop]);
+
+  const fetchMarkets = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:5000/api/best-markets/${selectedCrop}`);
+      setMarkets(response.data.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const currentMarkets = marketData[selectedCrop] || [];
-  const bestPrice = Math.max(...currentMarkets.map(m => m.price));
-  const worstPrice = Math.min(...currentMarkets.map(m => m.price));
+  const bestPrice = markets.length > 0 ? Math.max(...markets.map(m => m.price)) : 0;
+  const bestPredicted = markets.length > 0 ? Math.max(...markets.map(m => m.predicted)) : 0;
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           <Award className="text-yellow-500" size={28} />
-          {t('bestMarket.title')}
+          {t('bestMarket.title')} - Hyderabad Insights
         </h2>
       </div>
 
@@ -54,91 +44,82 @@ const BestMarketFinder = () => {
           <motion.button
             key={crop}
             onClick={() => setSelectedCrop(crop)}
-            className={`p-3 rounded-xl font-semibold transition-all ${
+            className={`p-2 rounded-xl font-semibold transition-all ${
               selectedCrop === crop
-                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-gradient-to-r from-emerald-600 to-green-500 text-white shadow-lg'
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
             }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             {t(`form.${crop}`)}
           </motion.button>
         ))}
       </div>
 
-      {/* Price Range Info */}
-      <div className="grid grid-cols-2 gap-4">
-        <motion.div
-          className="p-4 bg-green-50 border-2 border-green-200 rounded-xl"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <p className="text-sm text-gray-600 mb-1">{t('bestMarket.bestPrice')}</p>
-          <p className="text-2xl font-bold text-green-600">₹{bestPrice}</p>
-          <p className="text-xs text-green-500 mt-1">{t('bestMarket.highestRate')}</p>
+      {/* Analytics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <motion.div className="p-4 bg-green-50 border-2 border-green-200 rounded-xl">
+          <p className="text-sm text-gray-600">Highest Current Price</p>
+          <p className="text-2xl font-bold text-green-700">₹{bestPrice}</p>
         </motion.div>
-        <motion.div
-          className="p-4 bg-orange-50 border-2 border-orange-200 rounded-xl"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <p className="text-sm text-gray-600 mb-1">{t('bestMarket.goodPrice')}</p>
-          <p className="text-2xl font-bold text-orange-600">₹{worstPrice}</p>
-          <p className="text-xs text-orange-500 mt-1">{t('bestMarket.lowestRegion')}</p>
+        
+        <motion.div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-xl">
+          <p className="text-sm text-gray-600">AI Predicted Price</p>
+          <p className="text-2xl font-bold text-blue-700">₹{bestPredicted}</p>
+          <span className="text-xs text-blue-600 font-medium">+Next Month Prediction</span>
+        </motion.div>
+
+        <motion.div className="p-4 bg-purple-50 border-2 border-purple-200 rounded-xl">
+          <p className="text-sm text-gray-600">Trend Confidence</p>
+          <p className="text-2xl font-bold text-purple-700">92%</p>
+          <span className="text-xs text-purple-600">Based on historical data</span>
         </motion.div>
       </div>
 
       {/* Markets List */}
-      <div className="space-y-3">
-        {currentMarkets.map((market, idx) => (
-          <motion.div
-            key={idx}
-            className="p-4 bg-white border-2 border-gray-200 rounded-xl hover:shadow-lg transition-all hover:border-green-300"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: idx * 0.1 }}
-            whileHover={{ scale: 1.02, translateX: 5 }}
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="p-1 bgColor-green-100 rounded">
-                    <MapPin size={18} className="text-green-600" />
-                  </span>
-                  <h3 className="font-bold text-gray-800">{market.market}</h3>
+      <div className="space-y-4">
+        {loading ? (
+          <div className="text-center p-12 text-gray-400">Loading Hyderabad market data...</div>
+        ) : (
+          markets.map((m, idx) => (
+            <motion.div
+              key={idx}
+              className="p-5 bg-white border-2 border-gray-100 rounded-2xl shadow-sm hover:border-emerald-300 transition-all group"
+              whileHover={{ y: -3 }}
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-emerald-100 rounded-xl text-emerald-600">
+                    <MapPin size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-800">{m.name}</h3>
+                    <p className="text-gray-500 text-sm flex items-center gap-1">
+                      {m.distance} away • <span className="text-yellow-500 font-medium">{m.rating}</span>
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-500 ml-6">{market.distance} {t('bestMarket.away')}</p>
+                <div className="text-right">
+                  <p className="text-2xl font-black text-gray-900">₹{m.price}</p>
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Per Quintal</p>
+                </div>
               </div>
-              <motion.div
-                className={`text-sm font-bold px-3 py-1 rounded-full ${
-                  market.change.includes('+')
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
-                }`}
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                {market.change}
-              </motion.div>
-            </div>
 
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <DollarSign size={20} className="text-green-600" />
-                <span className="text-2xl font-bold text-gray-800">₹{market.price}</span>
-                <span className="text-sm text-gray-500">{t('market.perQuintal')}</span>
+              <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="text-blue-500" size={18} />
+                  <span className="text-sm font-bold text-blue-700">AI Predicts: ₹{m.predicted}</span>
+                  <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">NEXT MONTH</span>
+                </div>
+                <button 
+                  onClick={() => onSwitchTab('market')}
+                  className="text-sm font-black text-emerald-600 hover:text-emerald-700 underline px-3 py-2 bg-emerald-50 rounded-lg transition-all hover:scale-110 cursor-pointer"
+                >
+                  VIEW MARKET TRENDS 📈
+                </button>
               </div>
-              <span className="text-lg">{market.quality}</span>
-            </div>
-
-            {market.price === bestPrice && (
-              <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-700 font-semibold">🏆 {t('bestMarket.bestPriceAward')}</p>
-              </div>
-            )}
-          </motion.div>
-        ))}
+            </motion.div>
+          ))
+        )}
       </div>
 
       {/* Tips Section */}

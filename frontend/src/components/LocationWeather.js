@@ -9,6 +9,7 @@ const LocationWeather = () => {
   const [weather, setWeather] = useState(null);
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [areaName, setAreaName] = useState('');
 
   useEffect(() => {
     // Get user's location
@@ -18,23 +19,36 @@ const LocationWeather = () => {
           const { latitude, longitude } = position.coords;
           setLocation({ latitude, longitude });
           fetchWeather(latitude, longitude);
+          fetchAreaName(latitude, longitude);
         },
         (error) => {
           console.log('Location error:', error);
           setLoading(false);
           // Use default location (Delhi)
           fetchWeather(28.7041, 77.1025);
+          setAreaName('New Delhi');
         }
       );
     } else {
-      // Fallback to Delhi coordinates
       fetchWeather(28.7041, 77.1025);
+      setAreaName('New Delhi');
     }
   }, []);
 
+  const fetchAreaName = async (lat, lon) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+      const data = await response.json();
+      const name = data.address.city || data.address.town || data.address.village || data.address.suburb || 'Your Area';
+      setAreaName(name);
+    } catch (err) {
+      setAreaName('Your Area');
+    }
+  };
+
   const fetchWeather = async (lat, lon) => {
     try {
-      // Using Open-Meteo free weather API (no API key required)
+      // Using Open-Meteo free weather API
       const response = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,visibility&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`
       );
@@ -106,7 +120,7 @@ const LocationWeather = () => {
         <div className="p-2 bg-green-100 rounded-lg">
           <MapPin size={24} className="text-green-600" />
         </div>
-        <h2 className="text-2xl font-bold text-gray-800">{t('weather.title')}</h2>
+        <h2 className="text-2xl font-bold text-gray-800">{areaName || t('weather.title')}</h2>
       </div>
 
       {/* Current Weather */}

@@ -27,6 +27,8 @@ const historyRoutes = require('./routes/history');
 const insightsRoutes = require('./routes/insights');
 const marketRoutes = require('./routes/market');
 const weatherRoutes = require('./routes/weather');
+const schemesRoutes = require('./routes/schemes');
+const alertsRoutes = require('./routes/alerts');
 
 app.use('/api/auth', authRoutes);
 app.use('/api', analyzeRoutes);
@@ -34,6 +36,8 @@ app.use('/api', historyRoutes);
 app.use('/api', insightsRoutes);
 app.use('/api', marketRoutes);
 app.use('/api', weatherRoutes);
+app.use('/api', schemesRoutes);
+app.use('/api/alerts', alertsRoutes);
 
 // Schedule daily weather updates
 cron.schedule('0 6 * * *', () => {

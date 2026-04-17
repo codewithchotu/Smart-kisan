@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Leaf, Droplets, FlaskConical, CloudRain, Calendar, Waves } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -11,8 +11,25 @@ const InputForm = ({ onSubmit, loading, initialData }) => {
     rainfall: 'medium',
     crop: 'rice',
     season: 'kharif',
-    water: 'sufficient'
+    water: 'sufficient',
+    lat: null,
+    lng: null
   });
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFormData(prev => ({
+            ...prev,
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }));
+        },
+        (error) => console.log('Geolocation error:', error)
+      );
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({

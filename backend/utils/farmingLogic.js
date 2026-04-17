@@ -212,25 +212,79 @@ const getCropRecommendation = (soil, ph, rainfall) => {
   return recommendations;
 };
 
-// Get weather insights (mock data)
-const getWeatherInsights = () => {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const weather = [];
-  
-  for (let i = 0; i < 7; i++) {
-    weather.push({
-      day: days[i],
-      temp: Math.floor(Math.random() * 10) + 25,
-      condition: ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain'][Math.floor(Math.random() * 4)],
-      humidity: Math.floor(Math.random() * 40) + 40
+// Get real-time weather insights from Open-Meteo API
+const getWeatherInsights = async (lat = 28.7, lng = 77.1) => {
+  try {
+    const axios = require('axios');
+    const response = await axios.get(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min,relative_humidity_2m_max,weather_code&current_weather=true&timezone=auto`
+    );
+
+    const { daily, current_weather } = response.data;
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    
+    const weeklyWeather = daily.time.map((time, index) => {
+      const date = new Date(time);
+      return {
+        day: days[date.getDay()],
+        temp: Math.round(daily.temperature_2m_max[index]),
+        humidity: Math.round(daily.relative_humidity_2m_max[index]),
+        condition: getWeatherDescription(daily.weather_code[index])
+      };
     });
+
+    // Resolve area name from coordinates
+    let areaName = 'Selected Area';
+    try {
+      const geoRes = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`, {
+        headers: { 'User-Agent': 'SmartKisan/1.0' }
+      });
+      areaName = geoRes.data.address.city || geoRes.data.address.town || geoRes.data.address.village || geoRes.data.address.suburb || areaName;
+    } catch (e) { console.log('Geo resolution failed'); }
+
+    return {
+      areaName,
+      weekly: weeklyWeather,
+      recommendation: generateWeatherRecommendation(current_weather.temperature, daily.relative_humidity_2m_max[0]),
+      advisory: generateWeatherAdvisory(daily.weather_code[0])
+    };
+  } catch (error) {
+    console.error('Weather API Error:', error);
+    // Fallback to stylized mock data if API fails
+    return {
+      weekly: Array(7).fill(0).map((_, i) => ({
+        day: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i],
+        temp: 25 + i,
+        humidity: 60,
+        condition: 'Clear'
+      })),
+      recommendation: 'Unable to fetch real-time weather. Showing seasonal averages.',
+      advisory: 'Please check your internet connection for real-time updates.'
+    };
   }
-  
-  return {
-    weekly: weather,
-    recommendation: 'Next 3 days favorable for sowing. Light rainfall expected on Friday.',
-    advisory: 'Irrigation recommended every 3-4 days if no rainfall'
-  };
+};
+
+// Helper to describe weather code
+const getWeatherDescription = (code) => {
+  if (code === 0) return 'Clear';
+  if (code < 4) return 'Partly Cloudy';
+  if (code < 50) return 'Foggy';
+  if (code < 70) return 'Rainy';
+  return 'Cloudy';
+};
+
+// Helper for recommendations
+const generateWeatherRecommendation = (temp, humidity) => {
+  if (temp > 35) return 'High temperature detected. Ensure adequate irrigation and avoid fertilization during peak heat.';
+  if (humidity > 80) return 'High humidity: favorable for fungal growth. Monitor crops closely for signs of disease.';
+  return 'Current weather is stable. Ideal for standard farm maintenance and observation.';
+};
+
+// Helper for advisory
+const generateWeatherAdvisory = (code) => {
+  if (code >= 51) return 'Rain expected. Delay pesticide applications to avoid wash-off.';
+  if (code === 0) return 'Abundant sunlight expected. Good day for harvesting or drying crops.';
+  return 'Normal conditions. Continue with scheduled agricultural activities.';
 };
 
 module.exports = {

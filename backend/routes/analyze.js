@@ -6,7 +6,7 @@ const farmingLogic = require('../utils/farmingLogic');
 // POST /api/analyze
 router.post('/analyze', async (req, res) => {
   try {
-    const { soil, ph, rainfall, crop, season, water } = req.body;
+    const { soil, ph, rainfall, crop, season, water, lat, lng } = req.body;
 
     // Validate input
     if (!soil || !ph || !rainfall || !crop) {
@@ -27,7 +27,7 @@ router.post('/analyze', async (req, res) => {
     const pestGuidance = farmingLogic.getPestGuidance(crop);
     const fertilizerRecommendation = farmingLogic.getFertilizerRecommendation(soil, ph);
     const cropRecommendation = farmingLogic.getCropRecommendation(soil, ph, rainfall);
-    const weatherInsights = farmingLogic.getWeatherInsights();
+    const weatherInsights = await farmingLogic.getWeatherInsights(lat, lng);
 
     // Determine risk level
     let riskLevel = 'Low';
