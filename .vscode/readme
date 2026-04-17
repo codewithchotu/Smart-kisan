@@ -1,0 +1,32 @@
+External APIs Used:
+1. Open-Meteo API (https://api.open-meteo.com/v1/forecast)
+Function: Provides free weather forecasting data including temperature, humidity, precipitation, and weather codes.
+Usage:
+Fetches current weather and 7-day forecasts for farming locations.
+Generates weather-based farming recommendations and advisories.
+Endpoints Used:
+/v1/forecast (used in both weather.js route and farmingLogic.js utility)
+2. data.gov.in API (https://api.data.gov.in/resource/)
+Function: Official Indian government portal providing real-time agricultural market data.
+Usage: Fetches live mandi (market) prices for crops like rice, wheat, corn, etc., from various districts.
+Endpoints Used:
+Resource ID 9ef273e5-7f2d-4551-86a0-621cae48395f for daily mandi prices
+Authentication: Requires API key from data.gov.in
+3. whapi.cloud API (https://gate.whapi.cloud/messages/text)
+Function: WhatsApp Business API for sending automated messages.
+Usage: Sends farming alerts and notifications via WhatsApp.
+Authentication: Bearer token required
+4. Nominatim API (https://nominatim.openstreetmap.org/reverse)
+Function: OpenStreetMap's geocoding service for reverse geocoding.
+Usage: Converts latitude/longitude coordinates to human-readable location names (city, town, village).
+Headers: Includes User-Agent for identification
+5. Twilio API (via twilio npm package)
+Function: Cloud communications platform for SMS and WhatsApp messaging.
+Usage: Sends farming alerts via SMS and WhatsApp as backup/alternative to whapi.cloud.
+Authentication: Account SID and Auth Token required
+Additional Notes:
+All APIs have fallback mechanisms (mock data) when API keys are missing or services are unavailable.
+The project prioritizes Indian government and free/open-source APIs where possible.
+Weather and market data are cached/processed locally for better performance.
+Authentication keys are stored in environment variables (.env file).
+Raptor mini (Preview) • 1x
