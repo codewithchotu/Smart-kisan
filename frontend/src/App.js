@@ -20,7 +20,7 @@ import LanguageSelector from './components/LanguageSelector';
 import FarmerHero from './components/FarmerHero';
 import GovernmentSchemes from './components/GovernmentSchemes';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 function App() {
   const { t } = useTranslation();
